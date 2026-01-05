@@ -1,0 +1,7 @@
+ssdash
+
+*.json
+
+!ports.json
+
+*.swp
