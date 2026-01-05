@@ -35,10 +35,10 @@ The project follows a modular structure to separate concerns:
 * Privileges: sudo is required to resolve Process Names and PIDs.
 
 ### Installation
-1. Clone the repository: `git clone https://github.com/yourusername/ssdash.git`
+1. Clone the repository: `git clone https://github.com/Senasphy/ssdash.git`
 2. Enter the directory: `cd ssdash`
 3. Install dependencies: `go mod tidy`
-4. Build and Run: `go run main.go`
+4. Build and Run: `go run ./cmd/ssdash`
 
 ### Available Flags
 You can use the following flags to filter the connection list on startup:
