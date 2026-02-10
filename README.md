@@ -1,15 +1,15 @@
-# SSDash
+# UniSocket
 
-SSDash is a real-time terminal dashboard for monitoring network connections. Built with Go and the Bubble Tea TUI framework, it provides a reactive interface for inspecting active ports, PIDs, and process names across multiple operating systems.
+UniSocket is a real-time terminal dashboard for monitoring network connections. Built with Go and the Bubble Tea TUI framework, it provides a reactive interface for inspecting active ports, PIDs, and process names across multiple operating systems.
 
 ## Project Overview
 
 The following images demonstrate the interface in various states of operation.
 
-![SSDash Main View](./assets/main.png)
-The main view of SSDash displays a comprehensive list of all active connections including UDP and TCP protocols across various states.
+![UniSocket Main View](./assets/main.png)
+The main view of UniSocket displays a comprehensive list of all active connections including UDP and TCP protocols across various states.
 
-![SSDash Filtered View with Save Prompt](./assets/filtered.png)
+![UniSocket Filtered View with Save Prompt](./assets/filtered.png)
 The interface during a snapshot save operation. This view shows the interactive filename prompt used to export current data.
 
 ## Key Features
@@ -24,7 +24,7 @@ The interface during a snapshot save operation. This view shows the interactive 
 
 The project uses a modular structure with conditional compilation to handle OS differences:
 
-* cmd/ssdash: The application entry point.
+* cmd/unisocket: The application entry point.
 * internal/app: Contains the Bubble Tea Model, Update, and View logic.
 * internal/connections: The core engine. It uses OS-specific files (engine_linux.go, engine_windows.go, engine_darwin.go) to interface with system utilities like ss, netstat, and lsof.
 * internal/snapshot: Manages JSON encoding and disk persistence.
@@ -38,18 +38,18 @@ The project uses a modular structure with conditional compilation to handle OS d
 * Privileges: sudo or Administrator permissions are required to resolve Process Names and PIDs.
 
 ### Installation
-1. Clone the repository: `git clone https://github.com/Senasphy/ssdash.git`
-2. Enter the directory: `cd ssdash`
+1. Clone the repository: `git clone https://github.com/Senasphy/unisocket.git`
+2. Enter the directory: `cd unisocket`
 3. Install dependencies: `go mod tidy`
-4. Build and Run: `go run ./cmd/ssdash`
+4. Build and Run: `go run ./cmd/unisocket`
 
 ### Multi Platform Build
 To build for a specific platform from any OS:
 
-* Linux: `GOOS=linux GOARCH=amd64 go build -o bin/ssdash-linux ./cmd/ssdash`
-* Windows: `GOOS=windows GOARCH=amd64 go build -o bin/ssdash.exe ./cmd/ssdash`
-* macOS (Intel): `GOOS=darwin GOARCH=amd64 go build -o bin/ssdash-mac-intel ./cmd/ssdash`
-* macOS (M-Series): `GOOS=darwin GOARCH=arm64 go build -o bin/ssdash-mac-arm ./cmd/ssdash`
+* Linux: `GOOS=linux GOARCH=amd64 go build -o bin/unisocket-linux ./cmd/unisocket`
+* Windows: `GOOS=windows GOARCH=amd64 go build -o bin/unisocket.exe ./cmd/unisocket`
+* macOS (Intel): `GOOS=darwin GOARCH=amd64 go build -o bin/unisocket-mac-intel ./cmd/unisocket`
+* macOS (M-Series): `GOOS=darwin GOARCH=arm64 go build -o bin/unisocket-mac-arm ./cmd/unisocket`
 
 ## Available Flags
 Use these flags to filter the connection list on startup:
