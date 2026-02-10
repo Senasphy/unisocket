@@ -1,38 +1,41 @@
 # SSDash
 
-SSDash is a real time terminal dashboard for monitoring network connections. Built with Go and the Bubble Tea TUI framework, it provides a reactive interface for inspecting active ports, PIDs, and process names.
+SSDash is a real-time terminal dashboard for monitoring network connections. Built with Go and the Bubble Tea TUI framework, it provides a reactive interface for inspecting active ports, PIDs, and process names across multiple operating systems.
 
 ## Project Overview
 
 The following images demonstrate the interface in various states of operation.
 
 ![SSDash Main View](./assets/main.png)
-The main view of SSDash when running the binary without additional arguments. It displays a comprehensive list of all active connections including UDP and TCP protocols across various states.
+The main view of SSDash displays a comprehensive list of all active connections including UDP and TCP protocols across various states.
 
 ![SSDash Filtered View with Save Prompt](./assets/filtered.png)
-The interface when running with the listening flag. This view also shows the interactive filename prompt that appears when initiating a snapshot save.
+The interface during a snapshot save operation. This view shows the interactive filename prompt used to export current data.
 
 ## Key Features
 
 * Real Time Updates: Uses an asynchronous tick system to refresh connection data every 2 seconds without freezing the UI.
 * Asynchronous IO: System scans and file saving operations run in background goroutines to maintain UI responsiveness.
-* Dynamic Snapshots: Export current connection states to structured JSON files with a built in interactive filename prompt.
-* Modular Architecture: Clean separation between UI logic, system scanning, and data persistence.
+* Dynamic Snapshots: Export current connection states to structured JSON files with a built-in interactive filename prompt.
+* Cross Platform Support: Native support for Linux, Windows, and macOS using optimized system calls for each platform.
 * Process Resolution: Maps local ports to their respective Process IDs and Process Names.
 
 ## Project Architecture
 
-The project follows a modular structure to separate concerns:
+The project uses a modular structure with conditional compilation to handle OS differences:
 
+* cmd/ssdash: The application entry point.
 * internal/app: Contains the Bubble Tea Model, Update, and View logic.
-* internal/connections: Handles OS specific commands and raw data parsing.
+* internal/connections: The core engine. It uses OS-specific files (engine_linux.go, engine_windows.go, engine_darwin.go) to interface with system utilities like ss, netstat, and lsof.
 * internal/snapshot: Manages JSON encoding and disk persistence.
 
 ## Getting Started
 
 ### Prerequisites
-* OS: Linux (uses the ss utility).
-* Privileges: sudo is required to resolve Process Names and PIDs.
+* Linux: requires the ss utility.
+* macOS: uses lsof.
+* Windows: uses netstat.
+* Privileges: sudo or Administrator permissions are required to resolve Process Names and PIDs.
 
 ### Installation
 1. Clone the repository: `git clone https://github.com/Senasphy/ssdash.git`
@@ -40,8 +43,16 @@ The project follows a modular structure to separate concerns:
 3. Install dependencies: `go mod tidy`
 4. Build and Run: `go run ./cmd/ssdash`
 
-### Available Flags
-You can use the following flags to filter the connection list on startup:
+### Multi Platform Build
+To build for a specific platform from any OS:
+
+* Linux: `GOOS=linux GOARCH=amd64 go build -o bin/ssdash-linux ./cmd/ssdash`
+* Windows: `GOOS=windows GOARCH=amd64 go build -o bin/ssdash.exe ./cmd/ssdash`
+* macOS (Intel): `GOOS=darwin GOARCH=amd64 go build -o bin/ssdash-mac-intel ./cmd/ssdash`
+* macOS (M-Series): `GOOS=darwin GOARCH=arm64 go build -o bin/ssdash-mac-arm ./cmd/ssdash`
+
+## Available Flags
+Use these flags to filter the connection list on startup:
 
 * -tcp: List TCP connections only.
 * -udp: Show UDP connections only.
@@ -61,11 +72,11 @@ You can use the following flags to filter the connection list on startup:
 
 ## Data Export Format
 
-SSDash allows you to save your filtered or unfiltered lists to a prettified JSON file. This is useful for security audits or external logging.
+Snapshots are saved as prettified JSON files.
 
 ```json
 {
-  "timestamp": "2026-01-05T22:09:40Z",
+  "timestamp": "2026-02-09T22:09:40Z",
   "entries": [
     {
       "port": "5432 (postgres)",

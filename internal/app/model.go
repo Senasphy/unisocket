@@ -3,7 +3,7 @@ import(
 	"github.com/charmbracelet/bubbles/table"
 	tea "github.com/charmbracelet/bubbletea"
 	"github.com/charmbracelet/bubbles/textinput"
-	"github.com/Senasphy/ssdash/internal/connections"
+	"github.com/Senasphy/unisocket/internal/connections"
 	"time"
 
 
@@ -18,6 +18,7 @@ type Model struct{
 	table table.Model
 	statusMessage string
 	filename textinput.Model
+	lineCount int
 	isNamingFile bool
 	filters connections.Filters
 }

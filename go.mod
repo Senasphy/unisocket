@@ -1,4 +1,4 @@
-module github.com/Senasphy/ssdash
+module github.com/Senasphy/unisocket
 
 go 1.25.0
 

@@ -4,7 +4,7 @@ import(
 	tea "github.com/charmbracelet/bubbletea"
 	"github.com/charmbracelet/lipgloss"
 	"github.com/charmbracelet/bubbles/textinput"
-	"github.com/Senasphy/ssdash/internal/snapshot"
+	"github.com/Senasphy/unisocket/internal/snapshot"
 	"fmt"
 	"strings"
 )
@@ -73,6 +73,7 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd){
 func (m Model) View() string {
 
     s := baseStyle.Render(m.table.View()) + "\n"
+
     if m.statusMessage != "" {
         s += "\n  " + lipgloss.NewStyle().Foreground(lipgloss.Color("205")).Render(m.statusMessage)
     }
@@ -83,5 +84,6 @@ func (m Model) View() string {
         )
     }
     s += "\n  ↑/↓: Scroll • s: Save as... • q: Quit\n"
-    return s}
+    return s
+	}
 
