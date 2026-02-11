@@ -7,18 +7,16 @@ UniSocket is a real-time terminal dashboard for monitoring network connections. 
 The following images demonstrate the interface in various states of operation.
 
 ![UniSocket Main View](./assets/main.png)
-The main view of UniSocket displays a comprehensive list of all active connections including UDP and TCP protocols across various states.
-
+This is a display of the program running a linux machine. It is being executed with no filters and, meaning every connection is listed. It is also possible to see the name resolution in action in the image.
 ![UniSocket Filtered View with Save Prompt](./assets/filtered.png)
-The interface during a snapshot save operation. This view shows the interactive filename prompt used to export current data.
-
+The image shows the program being executed on a windows machine. In this specific usecase, the program is running with the --udp filter which obviously displays the UDP connections.
 ## Key Features
 
-* Real Time Updates: Uses an asynchronous tick system to refresh connection data every 2 seconds without freezing the UI.
-* Asynchronous IO: System scans and file saving operations run in background goroutines to maintain UI responsiveness.
-* Dynamic Snapshots: Export current connection states to structured JSON files with a built-in interactive filename prompt.
-* Cross Platform Support: Native support for Linux, Windows, and macOS using optimized system calls for each platform.
-* Process Resolution: Maps local ports to their respective Process IDs and Process Names.
+* Real Time Updates
+* Asynchronous IO 
+* Dynamic Snapshots 
+* Cross Platform Support
+* Process Resolution 
 
 ## Project Architecture
 
@@ -60,15 +58,6 @@ Use these flags to filter the connection list on startup:
 * -lsg: Show listening connections only.
 * -find [name]: List all connections matching a specific process or service name.
 
-## Controls
-
-| Key | Action |
-| :--- | :--- |
-| Up / Down Arrows | Scroll through the connection table |
-| s | Save Snapshot: Opens prompt to enter a filename |
-| Enter | Confirm filename and save JSON |
-| Esc | Cancel naming mode or Quit |
-| q | Quit application |
 
 ## Data Export Format
 

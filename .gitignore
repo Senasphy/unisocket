@@ -1,4 +1,6 @@
-ssdash
+bin/
+unisocket-*
+*.exe
 
 *.json
 
