@@ -8,7 +8,7 @@ The following images demonstrate the interface in various states of operation.
 
 ![UniSocket Main View](./assets/unisocket-linux.jpg)
 This is a display of the program running a linux machine. It is being executed with no filters and, meaning every connection is listed. It is also possible to see the name resolution in action in the image.
-![UniSocket Filtered View with Save Prompt](./assets/filtered.jpg)
+![UniSocket Filtered View with Save Prompt](./assets/unisocket-windows.jpg)
 The image shows the program being executed on a windows machine. In this specific usecase, the program is running with the --udp filter which obviously displays the UDP connections.
 ## Key Features
 
