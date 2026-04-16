@@ -1,56 +1,54 @@
 package app
-import(
-	"github.com/charmbracelet/bubbles/table"
-	tea "github.com/charmbracelet/bubbletea"
-	"github.com/charmbracelet/bubbles/textinput"
+
+import (
 	"github.com/Senasphy/unisocket/internal/connections"
+	"github.com/charmbracelet/bubbles/table"
+	"github.com/charmbracelet/bubbles/textinput"
+	tea "github.com/charmbracelet/bubbletea"
 	"time"
-
-
 )
-
 
 type tickMsg time.Time
 type DataArrivalMsg []table.Row
-type SavedMessageString string
 
-type Model struct{
-	table table.Model
+type Model struct {
+	table         table.Model
 	statusMessage string
-	filename textinput.Model
-	lineCount int
-	isNamingFile bool
-	filters connections.Filters
+	filename      textinput.Model
+	searchInput   textinput.Model
+	commandInput  textinput.Model
+	isNamingFile  bool
+	isSearching   bool
+	isCommandMode bool
+	filters       connections.Filters
+	allRows       []table.Row
+	searchQuery   string
+	sortMode      string
+	width         int
+	height        int
 }
 
-
-//INIT METHOD FOR THE MODEL
 func (m Model) Init() tea.Cmd {
 	return tea.Batch(m.fetchDataCmd(), tick())
 }
 
-
-func New(t table.Model, filter connections.Filters)tea.Model{
+func New(t table.Model, filter connections.Filters) tea.Model {
 	return Model{
-		table: t,
+		table:   t,
 		filters: filter,
-
+		allRows: t.Rows(),
 	}
 }
 
-
-func tick() tea.Cmd{
-	return tea.Tick(time.Second * 2, func (t time.Time) tea.Msg{
-					return tickMsg(t)
+func tick() tea.Cmd {
+	return tea.Tick(time.Second*2, func(t time.Time) tea.Msg {
+		return tickMsg(t)
 	})
 }
 
-
 func (m Model) fetchDataCmd() tea.Cmd {
-    return func() tea.Msg {
-        rows := connections.GetConnections(m.filters)
-        return DataArrivalMsg(rows)
-    }
+	return func() tea.Msg {
+		rows := connections.GetConnections(m.filters)
+		return DataArrivalMsg(rows)
+	}
 }
-
-

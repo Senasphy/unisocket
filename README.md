@@ -17,6 +17,9 @@ The image shows the program being executed on a windows machine. In this specifi
 * Dynamic Snapshots 
 * Cross Platform Support
 * Process Resolution 
+* Keyboard-first interaction (`/`, `k`, and `:` command row)
+* In-app sorting and filtering without restarting
+* Refreshed production-style terminal UI
 
 ## Project Architecture
 
@@ -57,6 +60,19 @@ Use these flags to filter the connection list on startup:
 * -estab: Show established connections only.
 * -lsg: Show listening connections only.
 * -find [name]: List all connections matching a specific process or service name.
+
+## Interactive Controls
+
+UniSocket now supports interactive controls similar to editor workflows:
+
+* `/` opens the search row. Type to live-filter rows. `Enter` keeps the filter, `Esc` exits and clears it.
+* `K` kills the process in the currently selected row (uses the PID column).
+* `s` opens a centered snapshot filename prompt.
+* `:` opens a command row (Neovim-style). Supported commands:
+* `:sn` sort by connection/service name (PORT column).
+* `:spn` sort by process name.
+* `:spid` sort by PID.
+* `q` / `esc` / `ctrl+c` exits.
 
 
 ## Data Export Format
