@@ -52,8 +52,11 @@ func main() {
 	s.Header = s.Header.
 		BorderStyle(lipgloss.NormalBorder()).
 		BorderForeground(lipgloss.Color("63")).
-		BorderBottom(true).
+		BorderBottom(false).
+		Padding(0, 1).
+		MarginBottom(1).
 		Foreground(lipgloss.Color("229")).
+		Background(lipgloss.Color("24")).
 		Bold(true)
 	s.Selected = s.Selected.
 		Foreground(lipgloss.Color("230")).
