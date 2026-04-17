@@ -12,20 +12,23 @@ type tickMsg time.Time
 type DataArrivalMsg []table.Row
 
 type Model struct {
-	table         table.Model
-	statusMessage string
-	filename      textinput.Model
-	searchInput   textinput.Model
-	commandInput  textinput.Model
-	isNamingFile  bool
-	isSearching   bool
-	isCommandMode bool
-	filters       connections.Filters
-	allRows       []table.Row
-	searchQuery   string
-	sortMode      string
-	width         int
-	height        int
+	table           table.Model
+	statusMessage   string
+	filename        textinput.Model
+	searchInput     textinput.Model
+	commandInput    textinput.Model
+	isNamingFile    bool
+	isKillConfirm   bool
+	isSearching     bool
+	isCommandMode   bool
+	filters         connections.Filters
+	allRows         []table.Row
+	searchQuery     string
+	sortMode        string
+	pendingKillPID  string
+	pendingKillName string
+	width           int
+	height          int
 }
 
 func (m Model) Init() tea.Cmd {
