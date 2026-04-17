@@ -14,36 +14,43 @@ import (
 )
 
 var (
+	colorText      = lipgloss.Color("230")
+	colorMuted     = lipgloss.Color("245")
+	colorBorder    = lipgloss.Color("31")
+	colorHighlight = lipgloss.Color("31")
+	colorStatus    = lipgloss.Color("222")
+
 	pageStyle = lipgloss.NewStyle().
 			Padding(1, 2)
 
 	titleStyle = lipgloss.NewStyle().
 			Bold(true).
-			Foreground(lipgloss.Color("230")).
-			Background(lipgloss.Color("31")).
+			Foreground(colorText).
+			Background(colorHighlight).
 			Padding(0, 1)
 
 	tableStyle = lipgloss.NewStyle().
 			BorderStyle(lipgloss.RoundedBorder()).
-			BorderForeground(lipgloss.Color("63")).
+			BorderForeground(colorBorder).
+			Foreground(colorText).
 			Padding(0, 1)
 
 	statusStyle = lipgloss.NewStyle().
-			Foreground(lipgloss.Color("222"))
+			Foreground(colorStatus)
 
 	footerStyle = lipgloss.NewStyle().
-			Foreground(lipgloss.Color("245"))
+			Foreground(colorMuted)
 
 	modalStyle = lipgloss.NewStyle().
 			BorderStyle(lipgloss.RoundedBorder()).
-			BorderForeground(lipgloss.Color("69")).
-			Padding(1, 2).
-			Width(60)
+			BorderForeground(colorBorder).
+			Foreground(colorText).
+			Padding(1, 2)
 
 	commandRowStyle = lipgloss.NewStyle().
-			Foreground(lipgloss.Color("252")).
-			Background(lipgloss.Color("236")).
-			Padding(0, 1)
+			Foreground(colorText).
+			Padding(0, 1).
+			Bold(true)
 )
 
 func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
@@ -70,6 +77,20 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		}
 		m.filename, cmd = m.filename.Update(msg)
 		return m, cmd
+	}
+
+	if m.isKillConfirm {
+		if keyMsg, ok := msg.(tea.KeyMsg); ok {
+			m.isKillConfirm = false
+			if keyMsg.String() == "enter" {
+				return m, m.terminatePendingProcess()
+			}
+			m.pendingKillPID = ""
+			m.pendingKillName = ""
+			m.statusMessage = "Process termination cancelled"
+			return m, nil
+		}
+		return m, nil
 	}
 
 	if m.isSearching {
@@ -118,7 +139,7 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		m.width = msg.Width
 		m.height = msg.Height
 		tableHeight := msg.Height - 12
-		tableHeight = max(5,tableHeight)
+		tableHeight = max(5, tableHeight)
 		m.table.SetHeight(tableHeight)
 		return m, nil
 	case tickMsg:
@@ -152,7 +173,8 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			m.commandInput.Focus()
 			return m, nil
 		case "K":
-			return m, m.killSelectedProcess()
+			m.startKillConfirmation()
+			return m, nil
 		}
 	case snapshot.SavedMessageString:
 		m.statusMessage = string(msg)
@@ -181,7 +203,7 @@ func (m Model) View() string {
 	if m.sortMode != "" {
 		sortHint = m.sortMode
 	}
-	footer := fmt.Sprintf("↑/↓: Navigate • /: Search • K: Kill process • s: Snapshot • : Command row • q: Quit   |   search=%s sort=%s", searchHint, sortHint)
+	footer := fmt.Sprintf("↑/↓ or j/k: Navigate • /: Search • K: Kill process • s: Snapshot • : Command row • q: Quit   |   search=%s sort=%s", searchHint, sortHint)
 	content += footerStyle.Render(footer)
 
 	if m.isCommandMode {
@@ -194,13 +216,21 @@ func (m Model) View() string {
 
 	view := pageStyle.Render(content)
 	if m.isNamingFile {
-		modal := modalStyle.Render(
+		modal := modalStyle.Width(m.modalWidthForTable(tableView)).Render(
 			fmt.Sprintf("Save snapshot as:\n\n%s\n\nEnter: Save    Esc: Cancel", m.filename.View()),
 		)
-		if m.width > 0 {
-			return view + "\n\n" + lipgloss.NewStyle().Width(m.width).Align(lipgloss.Center).Render(modal)
-		}
-		return view + "\n\n" + modal
+		return view + "\n\n" + m.centerWithinTable(tableView, modal)
+	}
+
+	if m.isKillConfirm {
+		modal := modalStyle.Width(m.modalWidthForTable(tableView)).Render(
+			fmt.Sprintf(
+				"Confirm Termination\n\nPID: %s   |   Process: %s\n\n[Enter] Terminate    [Any other key] Cancel",
+				m.pendingKillPID,
+				m.pendingKillName,
+			),
+		)
+		return view + "\n\n" + m.centerWithinTable(tableView, modal)
 	}
 
 	return view
@@ -278,21 +308,63 @@ func (m *Model) applyCommand(command string) {
 	}
 }
 
-func (m *Model) killSelectedProcess() tea.Cmd {
+func (m *Model) startKillConfirmation() {
 	row := m.table.SelectedRow()
 	if len(row) < 2 {
 		m.statusMessage = "No row selected"
-		return nil
+		return
 	}
 	pid := strings.TrimSpace(row[1])
 	if pid == "" || pid == "-" {
 		m.statusMessage = "Selected row has no killable PID"
+		return
+	}
+	processName := "Unknown"
+	if len(row) > 2 && strings.TrimSpace(row[2]) != "" {
+		processName = strings.TrimSpace(row[2])
+	}
+	m.pendingKillPID = pid
+	m.pendingKillName = processName
+	m.isKillConfirm = true
+}
+
+func (m *Model) terminatePendingProcess() tea.Cmd {
+	pid := strings.TrimSpace(m.pendingKillPID)
+	processName := strings.TrimSpace(m.pendingKillName)
+	m.pendingKillPID = ""
+	m.pendingKillName = ""
+	if pid == "" {
+		m.statusMessage = "No process selected"
 		return nil
 	}
 	if err := connections.KillProcess(pid); err != nil {
-		m.statusMessage = fmt.Sprintf("Failed to kill PID %s: %v", pid, err)
+		m.statusMessage = fmt.Sprintf("Failed to terminate PID %s: %v", pid, err)
 		return nil
 	}
-	m.statusMessage = fmt.Sprintf("Killed PID %s", pid)
+	m.statusMessage = fmt.Sprintf("Terminated PID %s (%s)", pid, processName)
 	return m.fetchDataCmd()
+}
+
+func (m Model) centerWithinTable(tableView string, block string) string {
+	tableWidth := lipgloss.Width(tableView)
+	blockWidth := lipgloss.Width(block)
+	if tableWidth <= blockWidth || tableWidth == 0 {
+		return block
+	}
+	return lipgloss.NewStyle().Width(tableWidth).Align(lipgloss.Center).Render(block)
+}
+
+func (m Model) modalWidthForTable(tableView string) int {
+	tableWidth := lipgloss.Width(tableView)
+	if tableWidth <= 0 {
+		return 58
+	}
+	width := tableWidth - 4
+	if width < 42 {
+		return 42
+	}
+	if width > 72 {
+		return 72
+	}
+	return width
 }
