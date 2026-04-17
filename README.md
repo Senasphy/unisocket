@@ -5,8 +5,8 @@ It is built with Go + Bubble Tea, and designed with a polished retro terminal lo
 
 ## Screenshots
 
-![UniSocket Main UI (v1.0.1)](./assets/unisocket-v11.png)
-![UniSocket Sort By Process Name (v1.0.1)](./assets/unisocket-v11sortbypname.png)
+![UniSocket Main UI (v1.0.1)](./assets/unisock-v11.png)
+![UniSocket Sort By Process Name (v1.0.1)](./assets/unisock-v11sortbypname.png)
 
 ## Features
 
