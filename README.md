@@ -18,7 +18,23 @@ It is built with Go + Bubble Tea, and designed with a polished retro terminal lo
 
 ## Installation
 
-### 1. Install From GitHub Releases (Recommended)
+### 1. Scripted Install (Unix / Windows)
+
+For a one-command install, you can run the installer scripts directly from this repository.
+
+Unix (Linux/macOS):
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/Senasphy/unisocket/main/scripts/install.sh | sh
+```
+
+Windows PowerShell:
+
+```powershell
+iwr -useb https://raw.githubusercontent.com/Senasphy/unisocket/main/scripts/install.ps1 | iex
+```
+
+### 2. Install From GitHub Releases
 
 1. Open the latest release page: `https://github.com/Senasphy/unisocket/releases/latest`
 2. Download the archive for your OS/architecture.
@@ -32,13 +48,13 @@ sudo mv unisocket /usr/local/bin/unisocket
 ```
 
 
-### 2. Install With Go
+### 3. Install With Go
 
 ```bash
 go install github.com/Senasphy/unisocket/cmd/unisocket@latest
 ```
 
-### 3. Build From Source
+### 4. Build From Source
 
 ```bash
 git clone https://github.com/Senasphy/unisocket.git
