@@ -5,8 +5,20 @@ It is built with Go + Bubble Tea, and designed with a polished retro terminal lo
 
 ## Screenshots
 
-![UniSocket Main UI (v1.0.1)](./assets/unisock-v11.png)
-![UniSocket Sort By Process Name (v1.0.1)](./assets/unisock-v11sortbypname.png)
+### Tokyo Night Theme
+![UniSocket - Tokyo Night Theme](./assets/theme-tokyonight.png)
+
+### Live Theme Switcher (`t`)
+![UniSocket - Theme Switcher (Catppuccin Mocha)](./assets/theme-catppuccin.png)
+
+### Dracula Theme
+![UniSocket - Dracula Theme](./assets/theme-dracula.png)
+
+### Search & Filtering (Gruvbox Dark)
+![UniSocket - Search & Filter (Gruvbox)](./assets/theme-gruvbox.png)
+
+### Help & Command Reference (`?` / `:help`)
+![UniSocket - Help Reference](./assets/help-reference.png)
 
 ## Features
 
@@ -76,21 +88,96 @@ unisocket
 - `-estab`: Show established connections only.
 - `-lsg`: Show listening connections only.
 - `-find <name>`: Filter by process/service name at startup.
+- `-theme <name>`: Launch with a specific theme (e.g., `catppuccin`, `tokyonight`, `gruvbox`).
+- `-config <path>`: Path to a custom configuration file.
+- `-print-config`: Print the active configuration JSON and exit.
+
+## Configuration
+
+UniSocket automatically creates and loads a configuration file from:
+- **Linux/macOS**: `~/.config/unisocket/config.json`
+- **Windows**: `%APPDATA%\unisocket\config.json`
+
+You can customize themes, refresh intervals, startup filters, default sort modes, and even define your own custom color palettes:
+
+```json
+{
+  "theme": "tokyonight",
+  "refresh_interval": 2,
+  "default_sort": "process-name",
+  "snapshot_filename": "portList.json",
+  "filters": {
+    "tcp": false,
+    "udp": false,
+    "established": false,
+    "listening": false,
+    "find_by_name": ""
+  },
+  "custom_themes": [
+    {
+      "id": "matrix",
+      "name": "The Matrix",
+      "description": "Green phosphor retro terminal glow",
+      "text": "#00ff66",
+      "muted": "#005522",
+      "border": "#00ff66",
+      "highlight": "#003311",
+      "title_text": "#00ff66",
+      "status": "#00ff88",
+      "header_bg": "#002211",
+      "header_fg": "#00ff66",
+      "header_border": "#00ff66",
+      "selected_bg": "#00ff66",
+      "selected_fg": "#001100",
+      "modal_border": "#00ff66"
+    }
+  ]
+}
+```
+
+Any custom theme added to `custom_themes` is immediately registered and selectable via the interactive picker (`t`), command row (`:theme matrix`), or `-theme matrix` flag.
 
 ## Navigation & Controls
 
 - `↑/↓` or `j/k`: Move selection.
+- `t`: Open Theme Switcher with live preview (side-by-side on wide screens, stacked on compact screens).
+- `?` or `h`: Open Help & Command Reference dialog.
 - `/`: Open search row (live filtering while typing).
+  - `Esc` or `Ctrl+C`: Exit search mode and clear filter without quitting.
+  - `Enter`: Confirm filter and return to table.
+  - `Tab` or `↓`: Keep current search filter and move focus back to table.
 - `:`: Open command row (Neovim-style).
+  - `Esc` or `Ctrl+C`: Cancel command mode.
 - `s`: Save current table to JSON snapshot.
 - `K`: Open process termination confirmation popup.
-- `q`, `esc`, `ctrl+c`: Quit.
+- `Esc`: Clear active search filter (when on table), or cancel dialog.
+- `q`, `ctrl+c`: Quit.
 
 ### Command Row
 
+- `:help` or `:h` open help and command reference dialog.
 - `:sn` sort by connection/service name (PORT column).
 - `:spn` sort by process name.
 - `:spid` sort by PID.
+- `:theme` or `:t` open theme switcher modal.
+- `:theme <name>` or `:t <name>` switch theme directly (e.g., `:theme catppuccin`, `:theme tokyonight`, `:t gruv`).
+- `:q` or `:quit` quit UniSocket.
+
+## Themes
+
+UniSocket includes 11 themes with persistent preference storage:
+
+- `default` - Classic UniSocket retro cyan & amber
+- `catppuccin` (or `mocha`) - Catppuccin Mocha soothing pastel dark
+- `tokyonight` (or `tokyo`) - Tokyo Night neon downtown lights
+- `gruvbox` (or `gruv`) - Gruvbox Dark warm earthy groove
+- `dracula` - Dracula vibrant gothic dark theme
+- `nord` - Nord clean arctic blue palette
+- `onedark` - One Dark balanced Atom/Neovim palette
+- `rose-pine` (or `rose`) - Rosé Pine cozy Soho aesthetic
+- `solarized-dark` (or `solarized`) - Solarized Dark low-contrast classic
+- `monokai` - Monokai Pro high-contrast vibrancy
+- `cyberpunk` (or `synthwave`) - Cyberpunk Neon synthwave glow
 
 ## Process Termination
 
