@@ -5,20 +5,8 @@ It is built with Go + Bubble Tea, and designed with a polished retro terminal lo
 
 ## Screenshots
 
-### Tokyo Night Theme
-![UniSocket - Tokyo Night Theme](./assets/theme-tokyonight.png)
-
-### Live Theme Switcher (`t`)
-![UniSocket - Theme Switcher (Catppuccin Mocha)](./assets/theme-catppuccin.png)
-
-### Dracula Theme
-![UniSocket - Dracula Theme](./assets/theme-dracula.png)
-
-### Search & Filtering (Gruvbox Dark)
-![UniSocket - Search & Filter (Gruvbox)](./assets/theme-gruvbox.png)
-
-### Help & Command Reference (`?` / `:help`)
-![UniSocket - Help Reference](./assets/help-reference.png)
+![UniSocket Live Connection Monitor (Tokyo Night)](./assets/theme-tokyonight.png)
+![UniSocket Theme Switcher (Catppuccin Mocha)](./assets/theme-catppuccin.png)
 
 ## Features
 
